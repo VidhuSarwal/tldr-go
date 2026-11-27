@@ -1,0 +1,113 @@
+===== Starting state =====
+
+[ec2-user@xyz-amazonlinux ~]$ grep PRETTY_NAME /etc/os-release
+PRETTY_NAME="Amazon Linux 2023.12.20261120"
+
+[ec2-user@xyz-amazonlinux ~]$ getent group Developer Tester
+Developer:x:1001:Developer1,Developer2,Developer3
+Tester:x:1002:Tester1,Tester2
+
+[ec2-user@xyz-amazonlinux ~]$ ls /home
+Developer1
+Developer2
+Developer3
+Tester1
+Tester2
+ec2-user
+
+[ec2-user@xyz-amazonlinux ~]$ ls /opt/Hdfc_Bank-ClientApp
+Hdfc-Pack.zip
+pom.xml
+src
+===== (i) Add Developer4 to the Developer group =====
+
+[ec2-user@xyz-amazonlinux ~]$ getent group Developer
+Developer:x:1001:Developer1,Developer2,Developer3
+
+[ec2-user@xyz-amazonlinux ~]$ sudo useradd -m Developer4
+
+[ec2-user@xyz-amazonlinux ~]$ sudo usermod -aG Developer Developer4
+
+[ec2-user@xyz-amazonlinux ~]$ id Developer4
+uid=1006(Developer4) gid=1008(Developer4) groups=1008(Developer4),1001(Developer)
+
+[ec2-user@xyz-amazonlinux ~]$ getent group Developer
+Developer:x:1001:Developer1,Developer2,Developer3,Developer4
+
+[ec2-user@xyz-amazonlinux ~]$ ls -ld /home/Developer4
+drwx------ 2 Developer4 Developer4 4096 Nov 27 02:18 /home/Developer4
+===== (ii) Remove Developer3 completely =====
+
+[ec2-user@xyz-amazonlinux ~]$ id Developer3
+uid=1003(Developer3) gid=1005(Developer3) groups=1005(Developer3),1001(Developer)
+
+[ec2-user@xyz-amazonlinux ~]$ sudo find /home/Developer3
+/home/Developer3
+/home/Developer3/.bash_profile
+/home/Developer3/.bash_logout
+/home/Developer3/workspace
+/home/Developer3/workspace/notes.txt
+/home/Developer3/.bashrc
+
+[ec2-user@xyz-amazonlinux ~]$ sudo userdel -r Developer3
+===== (ii) Check that nothing of Developer3 is left =====
+
+[ec2-user@xyz-amazonlinux ~]$ id Developer3
+id: 'Developer3': no such user
+
+[ec2-user@xyz-amazonlinux ~]$ sudo grep -s Developer3 /etc/passwd /etc/shadow /etc/group /etc/gshadow || echo 'no entries left'
+no entries left
+
+[ec2-user@xyz-amazonlinux ~]$ ls /home
+Developer1
+Developer2
+Developer4
+Tester1
+Tester2
+ec2-user
+
+[ec2-user@xyz-amazonlinux ~]$ getent group Developer
+Developer:x:1001:Developer1,Developer2,Developer4
+
+[ec2-user@xyz-amazonlinux ~]$ sudo find / -xdev -nouser 2>/dev/null | wc -l
+0
+===== (iii) Show the contents of Hdfc-Pack.zip =====
+
+[ec2-user@xyz-amazonlinux Hdfc_Bank-ClientApp]$ ls -l
+total 12
+-rw-rw-r-- 1 root Developer 1528 Nov 27 02:17 Hdfc-Pack.zip
+-rw-rw-r-- 1 root Developer  191 Nov 27 02:17 pom.xml
+drwxrwsr-x 3 root Developer 4096 Nov 27 02:17 src
+
+[ec2-user@xyz-amazonlinux Hdfc_Bank-ClientApp]$ unzip -l Hdfc-Pack.zip
+Archive:  Hdfc-Pack.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  11-27-2026 02:17   Hdfc-Pack/
+       35  11-27-2026 02:17   Hdfc-Pack/README.txt
+        0  11-27-2026 02:17   Hdfc-Pack/logs/
+       50  11-27-2026 02:17   Hdfc-Pack/logs/debug.log
+        0  11-27-2026 02:17   Hdfc-Pack/sql/
+       54  11-27-2026 02:17   Hdfc-Pack/sql/schema.sql
+        0  11-27-2026 02:17   Hdfc-Pack/config/
+       33  11-27-2026 02:17   Hdfc-Pack/config/app.properties
+---------                     -------
+      172                     8 files
+===== (iii) Delete a file from Hdfc-Pack.zip =====
+
+[ec2-user@xyz-amazonlinux Hdfc_Bank-ClientApp]$ sudo zip -d Hdfc-Pack.zip Hdfc-Pack/logs/debug.log
+deleting: Hdfc-Pack/logs/debug.log
+
+[ec2-user@xyz-amazonlinux Hdfc_Bank-ClientApp]$ unzip -l Hdfc-Pack.zip
+Archive:  Hdfc-Pack.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        0  11-27-2026 02:17   Hdfc-Pack/
+       35  11-27-2026 02:17   Hdfc-Pack/README.txt
+        0  11-27-2026 02:17   Hdfc-Pack/logs/
+        0  11-27-2026 02:17   Hdfc-Pack/sql/
+       54  11-27-2026 02:17   Hdfc-Pack/sql/schema.sql
+        0  11-27-2026 02:17   Hdfc-Pack/config/
+       33  11-27-2026 02:17   Hdfc-Pack/config/app.properties
+---------                     -------
+      122                     7 files
