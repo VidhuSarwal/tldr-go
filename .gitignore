@@ -1,0 +1,13 @@
+# Build output
+/tldr
+/tldr-go
+*.exe
+
+# Test and coverage output
+*.out
+*.test
+
+# OS and editor files
+.DS_Store
+.vscode/
+.idea/
