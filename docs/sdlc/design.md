@@ -90,9 +90,10 @@ type Sentence struct {
 
 ### Design decisions
 
-- **Extractive, not AI-generated:** deterministic, works offline, and cannot
-  invent facts.
-- **Standard library only:** one binary with nothing else to install.
+- **Extractive, not AI-generated:** deterministic and works offline. It
+  selects existing sentences, but summaries still need quality review.
+- **Standard library only:** separate executable builds for each platform,
+  with nothing else to install.
 - **All scoring in one function:** each increment changes one place. This also
   means increments 2 and 3 meet in that function, which is the integration
   risk named above.

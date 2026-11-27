@@ -6,9 +6,10 @@ A small command-line text summarizer written in Go. Give it an article, a long
 README or your lecture notes, and it prints the few sentences that matter most,
 in their original order.
 
-It is **extractive**: it never writes new sentences, so the summary only ever
-says what the source says. It runs offline and uses only the Go standard
-library.
+It is **extractive**: it selects existing sentences rather than writing new
+ones. Selected sentences can still lose context, so a summary should be
+reviewed before it is relied on. It runs offline and uses only the Go
+standard library.
 
 ## How it works
 

@@ -8,8 +8,9 @@ a command-line tool that picks the most important sentences of a text and
 prints them as a short summary.
 
 It is extractive: it selects sentences from the source rather than writing new
-ones. The summary therefore cannot state anything the source does not, and the
-tool needs no AI model, no network and no account.
+ones. Selected sentences can still lose context or miss key points, so
+summaries still need quality review. The tool needs no AI model, no network
+and no account.
 
 ## 2. Users
 
@@ -44,7 +45,7 @@ input; a graphical interface; languages other than English.
 | ID | Requirement |
 | --- | --- |
 | NFR1 | **Performance:** summarize a 10,000-word text in under one second on a laptop. |
-| NFR2 | **Portability:** a single binary for macOS, Linux and Windows, built from the Go standard library only. |
+| NFR2 | **Portability:** separate executable builds for macOS, Linux and Windows, using only the Go standard library. |
 | NFR3 | **Determinism:** the same input always gives the same output. Ties go to the earlier sentence. |
 | NFR4 | **Maintainability:** every scoring rule has unit tests, and the tests run automatically on every push. |
 | NFR5 | **Privacy:** works offline; the text never leaves the machine. |
