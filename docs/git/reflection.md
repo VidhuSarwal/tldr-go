@@ -1,7 +1,6 @@
 # Reflection: the merge conflict in tldr-go
 
-**Project:** tldr-go, a command-line text summarizer in Go
-**Repository:** https://github.com/VidhuSarwal/tldr-go
+**Project:** tldr-go, a command-line text summarizer in Go. **Repository:** https://github.com/VidhuSarwal/tldr-go
 
 ## What caused the conflict
 

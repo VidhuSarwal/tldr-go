@@ -1,7 +1,6 @@
 # SDLC Report: tldr, a command-line text summarizer
 
-**Model:** Incremental
-**Supporting documents:** [requirements.md](requirements.md) (purpose, users, features) and [design.md](design.md) (model choice, plan, design, test plan)
+**Model:** Incremental. **Supporting documents:** [requirements.md](requirements.md) (purpose, users, features) and [design.md](design.md) (model choice, plan, design, test plan).
 
 ## 1. The problem and the chosen model
 

@@ -59,7 +59,7 @@ Fast-forward
 ```
 
 The pull is also recorded in the reflog (`HEAD@{9}: pull: Fast-forward`,
-screenshot 13).
+in the last screenshot of this page).
 
 ## 4. Two feature branches from the same commit
 
