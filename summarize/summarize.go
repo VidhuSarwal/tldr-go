@@ -73,10 +73,18 @@ func score(s Sentence, freq map[string]int) float64 {
 		return 0
 	}
 	total := 0.0
+	counted := 0
 	for _, w := range s.Words {
+		if stopwords[w] {
+			continue // "the", "and", "of" say nothing about the topic
+		}
 		total += float64(freq[w])
+		counted++
 	}
-	return total / float64(len(s.Words))
+	if counted == 0 {
+		return 0
+	}
+	return total / float64(counted)
 }
 
 // Summarize returns the n highest-scoring sentences of text, in the order they
