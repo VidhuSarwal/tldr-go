@@ -68,7 +68,8 @@ func frequencies(sentences []Sentence) map[string]int {
 
 // score rates a sentence by the average frequency of its words. Sentences
 // built from the words a text repeats most are usually about its main topic.
-func score(s Sentence, freq map[string]int) float64 {
+// count is the number of sentences in the whole text.
+func score(s Sentence, freq map[string]int, count int) float64 {
 	if len(s.Words) == 0 {
 		return 0
 	}
@@ -76,7 +77,8 @@ func score(s Sentence, freq map[string]int) float64 {
 	for _, w := range s.Words {
 		total += float64(freq[w])
 	}
-	return total / float64(len(s.Words))
+	// Opening sentences usually state the main idea, so they get a boost.
+	return total / float64(len(s.Words)) * positionWeight(s.Index, count)
 }
 
 // Summarize returns the n highest-scoring sentences of text, in the order they
@@ -94,7 +96,7 @@ func Summarize(text string, n int) []string {
 	freq := frequencies(sentences)
 	scores := make([]float64, len(sentences))
 	for i, s := range sentences {
-		scores[i] = score(s, freq)
+		scores[i] = score(s, freq, len(sentences))
 	}
 
 	// Rank a copy by score, best first. SliceStable keeps the earlier sentence
