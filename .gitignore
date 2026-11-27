@@ -11,3 +11,6 @@
 .DS_Store
 .vscode/
 .idea/
+
+# Upload-ready PDFs, generated from the docs
+/submission/

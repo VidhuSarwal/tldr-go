@@ -1,5 +1,7 @@
 # tldr-go
 
+[![test](https://github.com/VidhuSarwal/tldr-go/actions/workflows/test.yml/badge.svg)](https://github.com/VidhuSarwal/tldr-go/actions/workflows/test.yml)
+
 A small command-line text summarizer written in Go. Give it an article, a long
 README or your lecture notes, and it prints the few sentences that matter most,
 in their original order.
@@ -40,4 +42,14 @@ go test ./...
 | `main.go` | Command-line interface: flags, reading the file or stdin, printing |
 | `summarize/` | The summarizer: sentence splitting, word counts, scoring, ranking |
 | `testdata/sample.txt` | Sample text to try the tool on |
-| `docs/sdlc/` | Requirements and design (Incremental SDLC model) |
+| `docs/sdlc/` | Requirements, design and report (Incremental SDLC model) |
+| `docs/git/` | How this repository was built, including the merge conflict |
+| `linux-user-management/` | A separate exercise: user management on Amazon Linux |
+
+## Assignment index
+
+| Question | Where to look |
+| --- | --- |
+| **Git project with an intentional merge conflict** | This code and its history: branches `feature/position-weighting` and `feature/stopwords`, merge commit `7750acc`. Steps: [docs/git/steps.md](docs/git/steps.md). Reflection: [docs/git/reflection.md](docs/git/reflection.md). Screenshots: [docs/screenshots/](docs/screenshots/) |
+| **SDLC design (Incremental model)** | Report: [docs/sdlc/report.md](docs/sdlc/report.md). Requirements: [requirements.md](docs/sdlc/requirements.md). Plan, design and test plan: [design.md](docs/sdlc/design.md) |
+| **Linux user management on Amazon Linux** | [linux-user-management/README.md](linux-user-management/README.md) |
