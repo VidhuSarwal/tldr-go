@@ -1,0 +1,16 @@
+Version control is a system that records changes to files over time, so that
+you can go back to any earlier version later. Early tools such as RCS tracked
+changes to single files on one machine. Centralized systems such as Subversion
+then kept the whole history on a shared server, and every developer had to
+reach that server before they could commit.
+
+Git took a different approach. In Git, every clone is a complete copy of the
+repository, including its entire history. Because each developer holds the
+whole history, most Git operations run locally and still work without a
+network connection. Branching in Git is cheap, so developers usually create a
+branch for each feature and merge it back when the feature is done.
+
+Merging is usually automatic, but when two branches change the same lines, Git
+stops and asks a person to decide. That pause is called a merge conflict, and
+resolving it carefully is a core version control skill. Many developers also
+enjoy a good cup of coffee while they work.
