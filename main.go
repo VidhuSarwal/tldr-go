@@ -1,8 +1,7 @@
-// Command tldr prints a short summary of a text: the few sentences that
-// matter most, in their original order.
+// Command tldr prints the most important sentences of a file or standard
+// input.
 //
 //	tldr -n 3 article.txt
-//	cat notes.txt | tldr
 package main
 
 import (

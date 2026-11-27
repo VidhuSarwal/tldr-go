@@ -1,8 +1,5 @@
-// Package summarize picks the most important sentences out of a block of text.
-//
-// It is an extractive summarizer: it never writes new sentences. It scores the
-// sentences that are already there and returns the best few, in the order they
-// appeared.
+// Package summarize selects the highest-scoring sentences of a text and
+// returns them in their original order.
 package summarize
 
 import (
@@ -14,17 +11,16 @@ import (
 
 // Sentence is one sentence of the input text.
 type Sentence struct {
-	Text  string   // the sentence exactly as it appeared in the input
-	Words []string // lower-cased words with punctuation removed
-	Index int      // position of the sentence in the input, starting at 0
+	Text  string   // as it appeared in the input
+	Words []string // lower-case words without punctuation
+	Index int      // position in the input, from 0
 }
 
-// sentenceEnd matches the end of a sentence: one or more of . ! ? followed
-// by whitespace.
+// sentenceEnd matches . ! or ? followed by whitespace.
 var sentenceEnd = regexp.MustCompile(`([.!?]+)\s+`)
 
-// Split breaks text into sentences. Line breaks inside a paragraph are
-// treated as spaces, so wrapped text splits the same way as unwrapped text.
+// Split breaks text into sentences. Line breaks inside a paragraph count as
+// spaces.
 func Split(text string) []Sentence {
 	text = strings.Join(strings.Fields(text), " ")
 	if text == "" {
@@ -40,8 +36,8 @@ func Split(text string) []Sentence {
 	return out
 }
 
-// words lower-cases s and returns its words, dropping punctuation.
-// Apostrophes inside a word ("don't") are kept.
+// words returns the lower-case words of s, keeping apostrophes inside words
+// such as "don't".
 func words(s string) []string {
 	fields := strings.FieldsFunc(strings.ToLower(s), func(r rune) bool {
 		return !unicode.IsLetter(r) && !unicode.IsDigit(r) && r != '\''
@@ -55,7 +51,6 @@ func words(s string) []string {
 	return out
 }
 
-// frequencies counts how often each word appears across all sentences.
 func frequencies(sentences []Sentence) map[string]int {
 	freq := make(map[string]int)
 	for _, s := range sentences {
@@ -66,9 +61,8 @@ func frequencies(sentences []Sentence) map[string]int {
 	return freq
 }
 
-// score rates a sentence by the average frequency of its words. Sentences
-// built from the words a text repeats most are usually about its main topic.
-// count is the number of sentences in the whole text.
+// score returns the average text-wide frequency of the sentence's
+// non-stopwords, weighted by position. count is the number of sentences.
 func score(s Sentence, freq map[string]int, count int) float64 {
 	if len(s.Words) == 0 {
 		return 0
@@ -77,7 +71,7 @@ func score(s Sentence, freq map[string]int, count int) float64 {
 	counted := 0
 	for _, w := range s.Words {
 		if stopwords[w] {
-			continue // "the", "and", "of" say nothing about the topic
+			continue
 		}
 		total += float64(freq[w])
 		counted++
@@ -89,9 +83,8 @@ func score(s Sentence, freq map[string]int, count int) float64 {
 	return total / float64(counted) * positionWeight(s.Index, count)
 }
 
-// Summarize returns the n highest-scoring sentences of text, in the order they
-// appear in the text. If the text has n sentences or fewer, all of them are
-// returned unchanged.
+// Summarize returns the n highest-scoring sentences of text in their original
+// order. If the text has n sentences or fewer, all of them are returned.
 func Summarize(text string, n int) []string {
 	sentences := Split(text)
 	if n <= 0 || len(sentences) == 0 {
@@ -107,20 +100,19 @@ func Summarize(text string, n int) []string {
 		scores[i] = score(s, freq, len(sentences))
 	}
 
-	// Rank a copy by score, best first. SliceStable keeps the earlier sentence
-	// ahead on a tie, so the same input always gives the same summary.
+	// SliceStable keeps the earlier sentence first on a tie, so the same input
+	// always gives the same summary.
 	ranked := append([]Sentence(nil), sentences...)
 	sort.SliceStable(ranked, func(i, j int) bool {
 		return scores[ranked[i].Index] > scores[ranked[j].Index]
 	})
 
-	// Keep the best n, then put them back in reading order.
+	// Keep the best n, then restore reading order.
 	top := ranked[:n]
 	sort.Slice(top, func(i, j int) bool { return top[i].Index < top[j].Index })
 	return texts(top)
 }
 
-// texts returns the Text of each sentence.
 func texts(sentences []Sentence) []string {
 	out := make([]string, len(sentences))
 	for i, s := range sentences {
